@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flight Computer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="chalkboard-container">
+        <h1>Flight Computer</h1>
+
+        <div class="calculator-grid">
+            <div class="left-panel">
+                <!-- Wind Selection -->
+                <section class="calc-section" id="wind-section">
+                    <h2>1. Wind Data</h2>
+                    <div class="wind-inputs">
+                        <div class="wind-level">
+                            <h3>Low Altitude</h3>
+                            <div class="row"><label>Alt:</label><input type="number" id="low-alt" value="3000"></div>
+                            <div class="row"><label>Wind:</label><input type="text" id="low-wind" placeholder="340/15"
+                                    value="340/15"></div>
+                        </div>
+                        <div class="wind-level">
+                            <h3>High Altitude</h3>
+                            <div class="row"><label>Alt:</label><input type="number" id="high-alt" value="6000"></div>
+                            <div class="row"><label>Wind:</label><input type="text" id="high-wind" placeholder="360/25"
+                                    value="360/25"></div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <label>Target Alt:</label>
+                        <input type="number" id="target-alt" value="4500">
+                    </div>
+
+                    <div class="result-box">
+                        Interpolated Wind: <span id="interp-wind-display" class="highlight">---/--</span>
+                    </div>
+
+                    <div class="row" style="margin-top: 15px;">
+                        <label>Mag Var:</label>
+                        <input type="number" id="mag-var" placeholder="-14 (W) or 5 (E)" value="-10">
+                    </div>
+
+                    <div class="result-box">
+                        Magnetic Wind: <span id="mag-wind-display" class="highlight">---/--</span>
+                    </div>
+                </section>
+
+                <!-- Course & Config -->
+                <section class="calc-section" id="course-section">
+                    <h2>2. Course & Speed</h2>
+                    <div class="row">
+                        <label>Inbound Crse:</label>
+                        <input type="number" id="course" placeholder="048" value="048">
+                    </div>
+                    <div class="row">
+                        <label>TAS (kts):</label>
+                        <input type="number" id="tas" value="120">
+                    </div>
+                    <div class="result-box">
+                        Std Max Drift: <span id="calc-max-drift" class="handwritten-result">--</span>
+                    </div>
+                </section>
+
+                <!-- Legs -->
+                <div class="legs-container">
+                    <!-- Inbound Leg -->
+                    <section class="calc-section" id="inbound-section">
+                        <h2>Inbound Leg</h2>
+                        <div class="calculations-display">
+                            <div class="calc-step">
+                                <span>Single Drift:</span>
+                                <span id="calc-single-drift" class="handwritten-result">--</span>
+                            </div>
+                            <div class="calc-step main-result">
+                                <span>Inbound Heading:</span>
+                                <span id="calc-inbound-hdg" class="highlight-box">---</span>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Outbound Leg -->
+                    <section class="calc-section" id="outbound-section">
+                        <h2>Outbound Leg</h2>
+                        <div class="row">
+                            <label>Leg Time (sec):</label>
+                            <input type="number" id="outbound-base-time" placeholder="60 (sec)" value="60">
+                        </div>
+
+                        <div class="calculations-display">
+                            <div class="calc-step">
+                                <span>Reciprocal Course:</span>
+                                <span id="calc-outbound-course" class="handwritten-result">--</span>
+                            </div>
+                            <div class="calc-step">
+                                <span>Single Drift:</span>
+                                <span id="calc-outbound-single-drift" class="handwritten-result">--</span>
+                            </div>
+                            <div class="calc-step">
+                                <span>Correction:</span>
+                                <span id="calc-outbound-correction" class="handwritten-result">--</span>
+                            </div>
+                            <div class="calc-step main-result">
+                                <span>Outbound Heading:</span>
+                                <span id="calc-outbound-hdg" class="highlight-box">---</span>
+                            </div>
+                            <div class="calc-step main-result">
+                                <span>Outbound Time:</span>
+                                <span id="calc-outbound-time" class="highlight-box">-- sec</span>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+            <div class="right-panel">
+                <!-- Visualization -->
+                <section class="calc-section viz-section">
+                    <h2>Hold Visualizer</h2>
+                    <div class="viz-container">
+                        <canvas id="hold-viz" width="800" height="800"></canvas>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>
