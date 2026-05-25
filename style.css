@@ -22,8 +22,6 @@ body {
 .chalkboard-container {
     max-width: 1600px;
     width: 95%;
-    background-color: #1a1a1d;
-    border-radius: 12px;
     padding: 24px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
