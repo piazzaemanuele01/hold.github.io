@@ -88,7 +88,6 @@ h1 {
 .row {
     display: flex;
     align-items: center;
-    gap: 15px;
     margin-bottom: 12px;
 }
 
@@ -208,7 +207,7 @@ input::-webkit-inner-spin-button {
     border-radius: 8px;
     padding: 10px;
     margin-top: 10px;
-    width: 100%;
+    width: 90%;
     max-width: 600px;
     aspect-ratio: 1 / 1;
     margin-left: auto;
