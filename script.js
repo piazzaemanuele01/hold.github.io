@@ -245,7 +245,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function drawHold(inboundCourse, windDir, windSpd, outboundTime, inboundHdg, outboundHdg) {
         // High DPI Support
-        const logicalSize = 700;
+        const logicalSize = 800;
         const dpr = window.devicePixelRatio || 1;
 
         // Ensure canvas internal resolution matches screen density
