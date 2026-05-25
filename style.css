@@ -14,7 +14,7 @@ body {
     color: var(--text-color);
     font-family: 'Patrick Hand', cursive, sans-serif;
     margin: 0;
-    padding: 20px;
+    /*padding: 20px;*/
     display: flex;
     justify-content: center;
     min-height: 100vh;
@@ -24,7 +24,7 @@ body {
     max-width: 1600px;
     width: 95%;
     background-color: #1a1a1d;
-    border: 8px solid #333;
+    /*border: 8px solid #333;*/
     border-radius: 12px;
     padding: 24px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
