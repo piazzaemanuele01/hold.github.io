@@ -200,7 +200,6 @@ input::-webkit-inner-spin-button {
     display: flex;
     justify-content: center;
     align-items: center;
-    background: #111;
     border: 2px dashed #444;
     border-radius: 8px;
     padding: 10px;
