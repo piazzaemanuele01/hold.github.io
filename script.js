@@ -32,6 +32,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const canvas = document.getElementById('hold-viz');
     const ctx = canvas.getContext('2d');
 
+    const holdStandardRadio = document.getElementById('hold-standard');
+    const holdNonStandardRadio = document.getElementById('hold-nonstandard');
+
     const inputs = [
         targetAltInput, lowAltInput, lowWindInput,
         highAltInput, highWindInput, magVarInput,
@@ -41,6 +44,9 @@ document.addEventListener('DOMContentLoaded', () => {
     inputs.forEach(input => {
         input.addEventListener('input', calculateAll);
     });
+
+    holdStandardRadio.addEventListener('change', calculateAll);
+    holdNonStandardRadio.addEventListener('change', calculateAll);
 
     function parseWind(val) {
         if (!val) return { dir: 0, spd: 0 };
@@ -184,8 +190,9 @@ document.addEventListener('DOMContentLoaded', () => {
         calcOutboundTime.textContent = `${Math.round(finalTime)} sec`;
 
         // DRAW VISUALIZATION
+        const isNonStandard = holdNonStandardRadio.checked;
         // Pass calculated time (rounded)
-        drawHold(inboundCourse, magDir, iSpd, Math.round(finalTime), Math.round(inboundHdg), Math.round(outboundHdg));
+        drawHold(inboundCourse, magDir, iSpd, Math.round(finalTime), Math.round(inboundHdg), Math.round(outboundHdg), isNonStandard);
     }
 
     function calculateDrift(course, windDir, maxDrift) {
@@ -243,7 +250,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return n.toString().padStart(3, '0');
     }
 
-    function drawHold(inboundCourse, windDir, windSpd, outboundTime, inboundHdg, outboundHdg) {
+    function drawHold(inboundCourse, windDir, windSpd, outboundTime, inboundHdg, outboundHdg, isNonStandard = false) {
         // High DPI Support
         const logicalSize = 800;
         const dpr = window.devicePixelRatio || 1;
@@ -336,6 +343,11 @@ document.addEventListener('DOMContentLoaded', () => {
         ctx.save();
         ctx.rotate((inboundCourse - 90) * Math.PI / 180);
 
+        // For non-standard (left turns): mirror the entire hold across the inbound leg.
+        // ctx.scale(1, -1) flips the Y axis so the racetrack appears on the opposite side.
+        // All arc definitions remain identical — the canvas transform handles the flip correctly.
+        if (isNonStandard) ctx.scale(1, -1);
+
         const scale = 1.6;
         const legLen = 140 * scale;
         const radius = 45 * scale;
@@ -343,7 +355,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const lx = -legLen;
         const rx = 0;
         const ty = 0;
-        const by = radius * 2;
+        const by = radius * 2;  // always positive; scale(1,-1) moves it to the correct side
 
         ctx.strokeStyle = '#98ff98';
         ctx.lineWidth = 5;
@@ -358,12 +370,12 @@ document.addEventListener('DOMContentLoaded', () => {
         // Arrow
         drawArrowHead(ctx, lx / 2, ty, 0, '#98ff98');
 
-        // Fix
+        // Fix dot
         ctx.beginPath();
         ctx.arc(0, 0, 6, 0, 2 * Math.PI);
         ctx.fill();
 
-        // Turn 1
+        // Turn 1 (at FIX)
         ctx.beginPath();
         ctx.arc(0, radius, radius, 1.5 * Math.PI, 0.5 * Math.PI, false);
         ctx.stroke();
@@ -374,10 +386,22 @@ document.addEventListener('DOMContentLoaded', () => {
         ctx.lineTo(lx, by);
         ctx.stroke();
 
-        // Inbound Labels (TRK/HDG)
+        // Turn 2 (far end)
+        ctx.beginPath();
+        ctx.arc(lx, radius, radius, 0.5 * Math.PI, 1.5 * Math.PI, false);
+        ctx.stroke();
+
+        // Helper: inside a label ctx.save block, undo the Y-flip so text is upright.
+        // Also undoes the course rotation so the label always reads horizontally.
+        const labelUnflip = () => {
+            if (isNonStandard) ctx.scale(1, -1);
+            ctx.rotate(-(inboundCourse - 90) * Math.PI / 180);
+        };
+
+        // Inbound Labels (TRK/HDG) — placed on the side AWAY from the hold
         ctx.save();
-        ctx.translate(lx / 2, -35); // Above Inbound Leg
-        ctx.rotate(-(inboundCourse - 90) * Math.PI / 180); // Upright
+        ctx.translate(lx / 2, -35);
+        labelUnflip();
         ctx.fillStyle = '#ccc';
         ctx.font = '14px Arial';
         ctx.textAlign = 'center';
@@ -387,40 +411,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Outbound Labels (TRK/HDG)
         ctx.save();
-        ctx.translate(lx / 2, by + 35); // Below Outbound Leg
-        ctx.rotate(-(inboundCourse - 90) * Math.PI / 180); // Upright
+        ctx.translate(lx / 2, by + 35);
+        labelUnflip();
         ctx.fillStyle = '#ccc';
         ctx.font = '14px Arial';
         ctx.textAlign = 'center';
-        const outTrack = (inboundCourse + 180) % 360; // Calculate local outbound track
+        const outTrack = (inboundCourse + 180) % 360;
         ctx.fillText(`TRK ${pad0(outTrack)}°`, 0, -8);
         ctx.fillText(`HDG ${pad0(outboundHdg)}°`, 0, 8);
         ctx.restore();
 
-        // Turn 2
-        ctx.beginPath();
-        ctx.arc(lx, radius, radius, 0.5 * Math.PI, 1.5 * Math.PI, false);
-        ctx.stroke();
-
-        // --- Gate 1 Marker (Beginning of Inbound Turn / End of Outbound Leg) ---
-        // Location: (lx, by)
+        // --- Gate 1 Marker (end of outbound leg) ---
         ctx.beginPath();
         ctx.arc(lx, by, 8, 0, 2 * Math.PI);
-        ctx.fillStyle = '#ff00ff'; // Magenta
-        ctx.fill();
-
         ctx.fillStyle = '#ff00ff';
-        ctx.font = 'bold 18px Arial';
+        ctx.fill();
 
         ctx.save();
         ctx.translate(lx - 15, by + 15);
-        ctx.rotate(-(inboundCourse - 90) * Math.PI / 180); // Keep upright
+        labelUnflip();
+        ctx.fillStyle = '#ff00ff';
+        ctx.font = 'bold 18px Arial';
         ctx.textAlign = 'right';
         ctx.fillText(`Gate 1 ${outboundTime}s`, 0, 0);
         ctx.restore();
 
-        // --- Gate 2 Marker (End of Inbound Turn / Start of Inbound Leg) ---
-        // Location: (lx, 0)
+        // --- Gate 2 Marker (end of inbound turn / start of inbound leg) ---
         ctx.beginPath();
         ctx.arc(lx, 0, 8, 0, 2 * Math.PI);
         ctx.fillStyle = '#ffaa00';
@@ -429,21 +445,20 @@ document.addEventListener('DOMContentLoaded', () => {
         let gate2Deg = (inboundCourse - 60);
         if (gate2Deg < 0) gate2Deg += 360;
 
-        ctx.fillStyle = '#ffaa00';
-        ctx.font = 'bold 18px Arial';
-
-        // Upright label for Gate 2
         ctx.save();
         ctx.translate(lx - 15, -15);
-        ctx.rotate(-(inboundCourse - 90) * Math.PI / 180); // Keep upright
+        labelUnflip();
+        ctx.fillStyle = '#ffaa00';
+        ctx.font = 'bold 18px Arial';
         ctx.textAlign = 'right';
         ctx.fillText(`Gate 2 ${pad0(Math.round(gate2Deg))}°`, 0, 0);
         ctx.restore();
 
-        // Fix Label (Upright)
+
+        // FIX Label
         ctx.save();
         ctx.translate(25, -25);
-        ctx.rotate(-(inboundCourse - 90) * Math.PI / 180);
+        labelUnflip();
         ctx.font = '20px Arial';
         ctx.fillStyle = '#98ff98';
         ctx.textAlign = 'left';
@@ -451,6 +466,7 @@ document.addEventListener('DOMContentLoaded', () => {
         ctx.restore();
 
         ctx.restore();
+
 
         // --- 3. WIND ARROW (Absolute) ---
         const windRad = (windDir - 90) * Math.PI / 180;
@@ -478,7 +494,19 @@ document.addEventListener('DOMContentLoaded', () => {
         ctx.fillText(`WIND ${pad0(windDir)}`, x1, y1 + (y1 < 0 ? -25 : 25));
 
         ctx.restore();
+
+        // --- 4. NON-STANDARD banner (absolute, top-left corner) ---
+        if (isNonStandard) {
+            ctx.save();
+            ctx.font = 'bold 18px Arial';
+            ctx.fillStyle = '#ffaa55';
+            ctx.textAlign = 'left';
+            ctx.textBaseline = 'top';
+            ctx.fillText('NON-STANDARD', 12, 12);
+            ctx.restore();
+        }
     }
+
 
     function drawArrowHead(ctx, x, y, radians, color, size = 10) {
         ctx.save();
