@@ -221,3 +221,47 @@ canvas {
 input[type=number] {
     -moz-appearance: textfield;
 }
+
+/* Hold Type Toggle */
+.hold-type-toggle {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.toggle-option {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    min-width: unset;
+}
+
+.toggle-option input[type="radio"] {
+    display: none;
+}
+
+.toggle-label {
+    font-size: 1.2em;
+    padding: 6px 18px;
+    border-radius: 999px;
+    border: 2px solid var(--border-color);
+    color: #aaa;
+    background: var(--input-bg);
+    transition: all 0.2s ease;
+    cursor: pointer;
+    white-space: nowrap;
+    margin-bottom: 0;
+    width: auto;
+}
+
+.toggle-option input[type="radio"]:checked+.toggle-label {
+    border-color: var(--chalk-green);
+    color: var(--chalk-green);
+    background: rgba(152, 255, 152, 0.12);
+    font-weight: bold;
+}
+
+.toggle-option:hover .toggle-label {
+    border-color: #888;
+    color: #ddd;
+}
