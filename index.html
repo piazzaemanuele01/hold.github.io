@@ -23,13 +23,17 @@
                     <div class="wind-inputs">
                         <div class="wind-level">
                             <h3>Low Altitude</h3>
-                            <div class="row"><label>Alt:</label><input type="number" id="low-alt" placeholder="3000" value=""></div>
-                            <div class="row"><label>Wind:</label><input type="text" id="low-wind" placeholder="350/15" value=""></div>
+                            <div class="row"><label>Alt:</label><input type="number" id="low-alt" placeholder="3000"
+                                    value=""></div>
+                            <div class="row"><label>Wind:</label><input type="text" id="low-wind" placeholder="350/15"
+                                    value=""></div>
                         </div>
                         <div class="wind-level">
                             <h3>High Altitude</h3>
-                            <div class="row"><label>Alt:</label><input type="number" id="high-alt" placeholder="8000" value=""></div>
-                            <div class="row"><label>Wind:</label><input type="text" id="high-wind" placeholder="360/25" value=""></div>
+                            <div class="row"><label>Alt:</label><input type="number" id="high-alt" placeholder="8000"
+                                    value=""></div>
+                            <div class="row"><label>Wind:</label><input type="text" id="high-wind" placeholder="360/25"
+                                    value=""></div>
                         </div>
                     </div>
 
@@ -123,6 +127,19 @@
                 <!-- Visualization -->
                 <section class="calc-section viz-section">
                     <h2>Hold Visualizer</h2>
+                    <div class="row" style="margin-bottom: 12px;">
+                        <label>Hold Type:</label>
+                        <div class="hold-type-toggle">
+                            <label class="toggle-option">
+                                <input type="radio" name="hold-type" id="hold-standard" value="standard" checked>
+                                <span class="toggle-label">Standard (R)</span>
+                            </label>
+                            <label class="toggle-option">
+                                <input type="radio" name="hold-type" id="hold-nonstandard" value="nonstandard">
+                                <span class="toggle-label">Non-Standard (L)</span>
+                            </label>
+                        </div>
+                    </div>
                     <div class="viz-container">
                         <canvas id="hold-viz" width="800" height="800"></canvas>
                     </div>
