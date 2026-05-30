@@ -222,46 +222,90 @@ input[type=number] {
     -moz-appearance: textfield;
 }
 
-/* Hold Type Toggle */
+/* Hold Type Flip Switch */
 .hold-type-toggle {
     display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-}
-
-.toggle-option {
-    display: flex;
     align-items: center;
-    cursor: pointer;
-    min-width: unset;
 }
 
-.toggle-option input[type="radio"] {
-    display: none;
-}
-
-.toggle-label {
-    font-size: 1.2em;
-    padding: 6px 18px;
+.flip-switch {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    width: 120px;
+    height: 28px;
     border-radius: 999px;
-    border: 2px solid var(--border-color);
-    color: #aaa;
-    background: var(--input-bg);
-    transition: all 0.2s ease;
+    border: none;
     cursor: pointer;
-    white-space: nowrap;
-    margin-bottom: 0;
-    width: auto;
-}
-
-.toggle-option input[type="radio"]:checked+.toggle-label {
-    border-color: var(--chalk-green);
-    color: var(--chalk-green);
-    background: rgba(152, 255, 152, 0.12);
+    padding: 0 14px;
+    font-family: 'Patrick Hand', cursive, sans-serif;
+    font-size: 0.8em;
     font-weight: bold;
+    overflow: hidden;
+    transition: background 0.35s ease;
+    background: #1e6b2e;
+    outline: none;
+    box-shadow: 0 0 0 2px #98ff98, 0 4px 12px rgba(0, 0, 0, 0.4);
+    user-select: none;
 }
 
-.toggle-option:hover .toggle-label {
-    border-color: #888;
-    color: #ddd;
+.flip-switch[data-state="standard"] {
+    background: #1e6b2e;
+    box-shadow: 0 0 0 2px #98ff98, 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.flip-switch[data-state="nonstandard"] {
+    background: #7a3d00;
+    box-shadow: 0 0 0 2px #ffaa00, 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.switch-circle {
+    position: absolute;
+    top: 4px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #fff;
+    transition: left 0.35s cubic-bezier(0.4, 0, 0.2, 1), background 0.35s ease;
+    left: 5px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+    z-index: 1;
+}
+
+.flip-switch[data-state="nonstandard"] .switch-circle {
+    left: calc(100% - 25px);
+}
+
+.switch-text-left,
+.switch-text-right {
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    letter-spacing: 0.5px;
+    pointer-events: none;
+}
+
+.switch-text-left {
+    left: 0;
+    color: #fff;
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.switch-text-right {
+    left: 0;
+    color: #fff;
+    opacity: 0;
+    transform: translateX(8px);
+}
+
+.flip-switch[data-state="nonstandard"] .switch-text-left {
+    opacity: 0;
+    transform: translateX(-8px);
+}
+
+.flip-switch[data-state="nonstandard"] .switch-text-right {
+    opacity: 1;
+    transform: translateX(0);
 }
