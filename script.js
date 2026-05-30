@@ -215,8 +215,8 @@ document.addEventListener('DOMContentLoaded', () => {
             driftFactor = 0.5; // 1/2 (Nearest to 30)
             factorText = "1/2";
         } else if (acuteAngle > 0) {
-            driftFactor = 1 / 3; // 1/3 (Nearest to 15?)
-            factorText = "1/3";
+            driftFactor = 1 / 4; // 1/4 (Nearest to 15)
+            factorText = "1/4";
         } else {
             driftFactor = 0;
             factorText = "0";
@@ -521,6 +521,20 @@ document.addEventListener('DOMContentLoaded', () => {
         ctx.fill();
         ctx.restore();
     }
+
+    // Flip-switch toggle for hold type
+    window.toggleHoldType = function () {
+        const btn = document.getElementById('hold-type-switch');
+        const current = btn.getAttribute('data-state');
+        if (current === 'standard') {
+            btn.setAttribute('data-state', 'nonstandard');
+            document.getElementById('hold-nonstandard').checked = true;
+        } else {
+            btn.setAttribute('data-state', 'standard');
+            document.getElementById('hold-standard').checked = true;
+        }
+        calculateAll();
+    };
 
     calculateAll(); // Run once
 });
