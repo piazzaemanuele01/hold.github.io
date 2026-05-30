@@ -130,14 +130,17 @@
                     <div class="row" style="margin-bottom: 12px;">
                         <label>Hold Type:</label>
                         <div class="hold-type-toggle">
-                            <label class="toggle-option">
-                                <input type="radio" name="hold-type" id="hold-standard" value="standard" checked>
-                                <span class="toggle-label">Standard (R)</span>
-                            </label>
-                            <label class="toggle-option">
-                                <input type="radio" name="hold-type" id="hold-nonstandard" value="nonstandard">
-                                <span class="toggle-label">Non-Standard (L)</span>
-                            </label>
+                            <!-- Hidden radios kept for JS compatibility -->
+                            <input type="radio" name="hold-type" id="hold-standard" value="standard" checked
+                                style="display:none">
+                            <input type="radio" name="hold-type" id="hold-nonstandard" value="nonstandard"
+                                style="display:none">
+                            <button id="hold-type-switch" class="flip-switch" data-state="standard"
+                                onclick="toggleHoldType()">
+                                <span class="switch-circle"></span>
+                                <span class="switch-text-left">STD</span>
+                                <span class="switch-text-right">NON-STD</span>
+                            </button>
                         </div>
                     </div>
                     <div class="viz-container">
